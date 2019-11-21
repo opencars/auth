@@ -4,18 +4,20 @@ import (
 	"github.com/opencars/auth/pkg/storage"
 	"log"
 	"net/http"
-	"os"
-
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
 )
 
-type AuthHandler struct {
+type Handler struct {
 	store *storage.Store
 }
 
+func NewHandler(store *storage.Store) *Handler {
+	return &Handler{
+		store: store,
+	}
+}
+
 // All requests will go here first to see if client is authenticated
-func (h *AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	id := r.Header.Get("Api-Key")
 
 	// No auth token - respond unauthorized.
@@ -35,21 +37,4 @@ func (h *AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("X-Name", token.Name)
 	w.WriteHeader(http.StatusOK)
-}
-
-func main() {
-	store := storage.Store{}
-
-	router := mux.NewRouter()
-	router.Handle("/api/v1/auth", AuthHandler{})
-
-	srv := http.Server{
-		Addr:    ":8080",
-		Handler: handlers.LoggingHandler(os.Stdout, router),
-	}
-
-	log.Println("Listening on port 8080...")
-	if err := srv.ListenAndServe(); err != nil {
-		log.Println(err)
-	}
 }

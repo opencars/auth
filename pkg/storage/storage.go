@@ -14,6 +14,12 @@ type Store struct {
 	db Database
 }
 
+func New(db Database) *Store {
+	return &Store{
+		db: db,
+	}
+}
+
 func (s *Store) Token(id string) (*Token, error) {
 	return s.db.Token(id)
 }
