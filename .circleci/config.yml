@@ -38,8 +38,6 @@ jobs:
           name: Build Project Binary
           command: |
             go build -o ./bin/server ./cmd/server/main.go
-            go build -o ./bin/worker ./cmd/worker/main.go
-            go build -o ./bin/pull   ./cmd/pull/main.go
 
   release:
     docker:

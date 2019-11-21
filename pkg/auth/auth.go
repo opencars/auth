@@ -1,36 +1,36 @@
 package auth
 
 import (
-	"github.com/opencars/auth/pkg/storage"
-	"log"
 	"net/http"
+
+	"github.com/opencars/auth/pkg/storage"
 )
 
+// Handler is responsible for checking request authentication.
+// Validates "Api-Key" header to have right credentials.
 type Handler struct {
 	store *storage.Store
 }
 
+// NewHandler creates new instance of Handler.
 func NewHandler(store *storage.Store) *Handler {
 	return &Handler{
 		store: store,
 	}
 }
 
-// All requests will go here first to see if client is authenticated
+// ServeHTTP implements http.Handler method.
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	id := r.Header.Get("Api-Key")
 
 	// No auth token - respond unauthorized.
 	if id == "" {
-		log.Println("Unauthorized")
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
-	// TODO: Check apiKey by selecting it from the storage.
 	token, err := h.store.Token(id)
 	if err != nil {
-		log.Println(err)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}

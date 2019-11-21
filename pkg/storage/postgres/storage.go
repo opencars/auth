@@ -2,18 +2,18 @@ package postgres
 
 import (
 	"fmt"
-	"github.com/jmoiron/sqlx"
 
-	_ "github.com/lib/pq"
+	"github.com/jmoiron/sqlx"
 
 	"github.com/opencars/auth/pkg/storage"
 )
 
-type database struct {
+type wrapper struct {
 	db *sqlx.DB
 }
 
-func New(host string, port int, user, password, dbname string) (storage.Database, error) {
+// New creates new implementation of storage.Adapter based on PostgreSQL.
+func New(host string, port int, user, password, dbname string) (storage.Adapter, error) {
 	info := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
 	db, err := sqlx.Connect("postgres", info)
@@ -21,14 +21,15 @@ func New(host string, port int, user, password, dbname string) (storage.Database
 		return nil, fmt.Errorf("connection failed: %w", err)
 	}
 
-	return &database{
+	return &wrapper{
 		db: db,
 	}, nil
 }
 
-func (db *database) Token(id string) (*storage.Token, error) {
+// Token returns full information about the auth method by uniqnue id.
+func (w *wrapper) Token(id string) (*storage.Token, error) {
 	var token storage.Token
-	if err := db.db.Get(&token, `SELECT id, name, enabled FROM tokens WHERE id = $1`, id); err != nil {
+	if err := w.db.Get(&token, `SELECT id, name, enabled FROM tokens WHERE id = $1`, id); err != nil {
 		return nil, err
 	}
 

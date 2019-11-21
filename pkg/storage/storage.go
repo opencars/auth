@@ -1,25 +1,30 @@
 package storage
 
-type Database interface {
+// Adapter represnt abstract interface for communication of storage tools.
+type Adapter interface {
 	Token(id string) (*Token, error)
 }
 
+// Token represents full information about the auth-method of the request.
 type Token struct {
 	ID      string `json:"id" db:"id"`
 	Name    string `json:"name" db:"name"`
 	Enabled bool   `json:"enabled" db:"enabled"`
 }
 
+// Store helps to work with data by using abstact methods.
 type Store struct {
-	db Database
+	adapter Adapter
 }
 
-func New(db Database) *Store {
+// New creates new store.
+func New(adapter Adapter) *Store {
 	return &Store{
-		db: db,
+		adapter: adapter,
 	}
 }
 
+// Token returns full information about the auth method by uniqnue id.
 func (s *Store) Token(id string) (*Token, error) {
-	return s.db.Token(id)
+	return s.adapter.Token(id)
 }
