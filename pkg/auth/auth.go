@@ -35,6 +35,12 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !token.Enabled {
+		// TODO: Return, that token was revoked.
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	w.Header().Set("X-Name", token.Name)
 	w.WriteHeader(http.StatusOK)
 }
