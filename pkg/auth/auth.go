@@ -21,7 +21,12 @@ func NewHandler(store *storage.Store) *Handler {
 
 // ServeHTTP implements http.Handler method.
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	id := r.Header.Get("Api-Key")
+	var id string
+	if apiKey := r.Header.Get("X-Api-Key"); apiKey != "" {
+		id = apiKey
+	} else {
+		id = r.Header.Get("Api-Key")
+	}
 
 	// No auth token - respond unauthorized.
 	if id == "" {
@@ -36,11 +41,11 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !token.Enabled {
-		// TODO: Return, that token was revoked.
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
-	w.Header().Set("X-Name", token.Name)
+	w.Header().Set("X-Auth-Id", token.ID)
+	w.Header().Set("X-Auth-Name", token.Name)
 	w.WriteHeader(http.StatusOK)
 }
