@@ -33,18 +33,4 @@ func main() {
 	if err := apiserver.Start(":8080", storage); err != nil {
 		log.Fatal(err)
 	}
-
-	// store := storage.New(db)
-	// router := mux.NewRouter()
-	// router.Handle("/api/v1/auth", auth.NewHandler(store))
-
-	// srv := http.Server{
-	// 	Addr:    ":8080",
-	// 	Handler: handlers.LoggingHandler(os.Stdout, router),
-	// }
-
-	// log.Println("Listening on port 8080...")
-	// if err := srv.ListenAndServe(); err != nil {
-	// 	log.Fatal(err)
-	// }
 }
