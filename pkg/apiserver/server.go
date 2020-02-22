@@ -1,6 +1,7 @@
 package apiserver
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gorilla/handlers"
@@ -53,6 +54,8 @@ func (s *server) handleAuth() http.HandlerFunc {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
+
+		log.Printf("%s - %s\n", token.ID, token.Name)
 
 		w.Header().Set("X-Auth-Id", token.ID)
 		w.Header().Set("X-Auth-Name", token.Name)

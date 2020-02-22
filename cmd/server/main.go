@@ -2,8 +2,9 @@ package main
 
 import (
 	"flag"
-	"github.com/opencars/auth/pkg/store/sqlstore"
 	"log"
+
+	"github.com/opencars/auth/pkg/store/sqlstore"
 
 	_ "github.com/lib/pq"
 
