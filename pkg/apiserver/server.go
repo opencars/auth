@@ -1,22 +1,20 @@
 package apiserver
 
 import (
-	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
-	"github.com/opencars/auth/pkg/storage"
+	"github.com/opencars/auth/pkg/store"
 )
 
 type server struct {
 	router *mux.Router
-	store  storage.Adapter
+	store  store.Store
 }
 
-func newServer(addr string, store storage.Adapter) *server {
+func newServer(store store.Store) *server {
 	server := &server{
 		router: mux.NewRouter(),
 		store:  store,
@@ -33,11 +31,6 @@ func (s *server) configureRoutes() {
 
 func (s *server) handleAuth() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
-		for k, v := range r.Header {
-			fmt.Println(k, strings.Join(v, " "))
-		}
-
 		var id string
 		if apiKey := r.Header.Get("X-Api-Key"); apiKey != "" {
 			id = apiKey
@@ -50,7 +43,7 @@ func (s *server) handleAuth() http.HandlerFunc {
 			return
 		}
 
-		token, err := s.store.Token(id)
+		token, err := s.store.Token().FindByID(id)
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			return

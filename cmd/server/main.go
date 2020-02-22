@@ -2,13 +2,13 @@ package main
 
 import (
 	"flag"
+	"github.com/opencars/auth/pkg/store/sqlstore"
 	"log"
 
 	_ "github.com/lib/pq"
 
 	"github.com/opencars/auth/pkg/apiserver"
 	"github.com/opencars/auth/pkg/config"
-	"github.com/opencars/auth/pkg/storage/postgres"
 )
 
 func main() {
@@ -24,13 +24,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Register postgres adapter.
-	storage, err := postgres.New(conf.DB.Host, conf.DB.Port, conf.DB.User, conf.DB.Password, conf.DB.Name)
+	store, err := sqlstore.New(conf.DB.Host, conf.DB.Port, conf.DB.User, conf.DB.Password, conf.DB.Name)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err := apiserver.Start(":8080", storage); err != nil {
+	if err := apiserver.Start(":8080", store); err != nil {
 		log.Fatal(err)
 	}
 }

@@ -7,12 +7,12 @@ import (
 
 	"github.com/gorilla/handlers"
 
-	"github.com/opencars/auth/pkg/storage"
+	"github.com/opencars/auth/pkg/store"
 )
 
-// Start ...
-func Start(addr string, store storage.Adapter) error {
-	server := newServer(addr, store)
+// Start begins listening for requests.
+func Start(addr string, store store.Store) error {
+	server := newServer(store)
 
 	srv := http.Server{
 		Addr:    addr,
