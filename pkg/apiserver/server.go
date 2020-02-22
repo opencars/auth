@@ -1,7 +1,9 @@
 package apiserver
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -31,6 +33,10 @@ func (s *server) configureRoutes() {
 
 func (s *server) handleAuth() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
+		for k, v := range r.Header {
+			fmt.Println(k, strings.Join(v, " "))
+		}
 
 		var id string
 		if apiKey := r.Header.Get("X-Api-Key"); apiKey != "" {

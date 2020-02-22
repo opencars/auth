@@ -16,7 +16,7 @@ func Start(addr string, store storage.Adapter) error {
 
 	srv := http.Server{
 		Addr:    addr,
-		Handler: handlers.LoggingHandler(os.Stdout, server),
+		Handler: handlers.LoggingHandler(os.Stdout, handlers.ProxyHeaders(server)),
 	}
 
 	log.Printf("Listening on port %s...\n", addr)
