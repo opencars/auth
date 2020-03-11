@@ -4,6 +4,8 @@ import (
 	"flag"
 	"log"
 
+	"github.com/opencars/auth/pkg/eventapi/natspub"
+
 	"github.com/opencars/auth/pkg/store/sqlstore"
 
 	_ "github.com/lib/pq"
@@ -30,7 +32,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err := apiserver.Start(":8080", store); err != nil {
+	pub, err := natspub.New(conf.EventAPI.Address(), conf.EventAPI.Enabled)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := apiserver.Start(":8080", store, pub); err != nil {
 		log.Fatal(err)
 	}
 }

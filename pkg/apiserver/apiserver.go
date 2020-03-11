@@ -5,14 +5,16 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/opencars/auth/pkg/eventapi"
+
 	"github.com/gorilla/handlers"
 
 	"github.com/opencars/auth/pkg/store"
 )
 
 // Start begins listening for requests.
-func Start(addr string, store store.Store) error {
-	server := newServer(store)
+func Start(addr string, store store.Store, publisher eventapi.Publisher) error {
+	server := newServer(store, publisher)
 
 	srv := http.Server{
 		Addr:    addr,
