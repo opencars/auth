@@ -5,7 +5,44 @@
 
 ## Overview
 
-:shield: Authencation provider for OpenCars API.
+:shield: Authorization provider for OpenCars API.
+
+## Event API
+
+On each authorization request new message published to the message broker.
+
+### Success
+
+```JSON
+{
+  "kind": "authorization",
+  "data": {
+    "enabled": true,
+    "id": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "ip": "172.18.0.1",
+    "name": "xxx-xxx",
+    "status": "succeed",
+    "timestamp": "2020-03-14T00:43:20"
+  }
+}
+```
+
+### Failure
+
+```JSON
+{
+  "kind": "authorization",
+  "data": {
+    "enabled": false,
+    "error": "auth.token.revoked",
+    "id": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "ip": "172.18.0.1",
+    "name": "xxx-xxx",
+    "status": "succeed",
+    "timestamp": "2020-03-14T00:43:20"
+  }
+}
+```
 
 ## License
 

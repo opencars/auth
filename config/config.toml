@@ -4,3 +4,8 @@ port = 5432
 username = "postgres"
 password = ""
 database = "auth"
+
+[event_api]
+enabled = true
+host = "127.0.0.1"
+port = 4222
