@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/opencars/auth/pkg/model"
-
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+
 	"github.com/opencars/auth/pkg/eventapi"
+	"github.com/opencars/auth/pkg/model"
 	"github.com/opencars/auth/pkg/store"
 )
 
@@ -70,8 +70,6 @@ func (s *server) handleAuth() Handler {
 		if !token.Enabled {
 			return s.result(&auth, &TokenRevoked)
 		}
-
-		log.Printf("%s - %s - %v\n", token.ID, token.Name, token.Enabled)
 
 		w.Header().Set("X-Auth-Id", token.ID)
 		w.Header().Set("X-Auth-Name", token.Name)
