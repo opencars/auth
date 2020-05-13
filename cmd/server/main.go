@@ -4,14 +4,12 @@ import (
 	"flag"
 	"log"
 
-	"github.com/opencars/auth/pkg/eventapi/natspub"
-
-	"github.com/opencars/auth/pkg/store/sqlstore"
-
 	_ "github.com/lib/pq"
 
 	"github.com/opencars/auth/pkg/apiserver"
 	"github.com/opencars/auth/pkg/config"
+	"github.com/opencars/auth/pkg/eventapi/natspub"
+	"github.com/opencars/auth/pkg/store/sqlstore"
 )
 
 func main() {
