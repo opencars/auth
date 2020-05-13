@@ -26,7 +26,7 @@ func (s *Store) Token() store.TokenRepository {
 }
 
 func New(host string, port int, user, password, dbname string) (*Store, error) {
-	info := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	info := fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode=disable password=%s", host, port, user, dbname, password)
 
 	db, err := sqlx.Connect("postgres", info)
 	if err != nil {

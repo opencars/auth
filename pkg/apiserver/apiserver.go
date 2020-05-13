@@ -5,10 +5,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/opencars/auth/pkg/eventapi"
-
 	"github.com/gorilla/handlers"
 
+	"github.com/opencars/auth/pkg/eventapi"
 	"github.com/opencars/auth/pkg/store"
 )
 

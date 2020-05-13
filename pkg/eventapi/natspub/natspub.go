@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/nats-io/nats.go"
+
 	"github.com/opencars/auth/pkg/eventapi"
 )
 
