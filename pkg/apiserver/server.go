@@ -1,6 +1,7 @@
 package apiserver
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -20,15 +21,15 @@ type server struct {
 }
 
 func newServer(store store.Store, publisher eventapi.Publisher) *server {
-	server := &server{
+	s := server{
 		router:    mux.NewRouter(),
 		publisher: publisher,
 		store:     store,
 	}
 
-	server.configureRoutes()
+	s.configureRoutes()
 
-	return server
+	return &s
 }
 
 func (s *server) configureRoutes() {
@@ -54,12 +55,12 @@ func (s *server) handleAuth() Handler {
 		}
 
 		if id == "" {
-			return s.result(&auth, &InvalidToken)
+			return s.result(&auth, &ErrInvalidToken)
 		}
 
 		token, err := s.store.Token().FindByID(id)
 		if err == store.ErrRecordNotFound {
-			return s.result(&auth, &InvalidToken)
+			return s.result(&auth, &ErrInvalidToken)
 		}
 
 		if err != nil {
@@ -68,12 +69,19 @@ func (s *server) handleAuth() Handler {
 
 		auth.Token = *token
 		if !token.Enabled {
-			return s.result(&auth, &TokenRevoked)
+			return s.result(&auth, &ErrTokenRevoked)
 		}
 
 		w.Header().Set("X-Auth-Id", token.ID)
 		w.Header().Set("X-Auth-Name", token.Name)
 		w.WriteHeader(http.StatusOK)
+
+		// Log headers. TODO: Remove!
+		for name, values := range r.Header {
+			for _, value := range values {
+				fmt.Println(name, value)
+			}
+		}
 
 		return s.result(&auth, nil)
 	}

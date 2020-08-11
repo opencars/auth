@@ -22,8 +22,7 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		default:
 			log.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
-			e = NewError(http.StatusInternalServerError, "system.unhealthy")
-			if err := json.NewEncoder(w).Encode(e); err != nil {
+			if err := json.NewEncoder(w).Encode(ErrUnhealthy); err != nil {
 				panic(err)
 			}
 		}
