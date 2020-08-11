@@ -7,7 +7,7 @@ import (
 var (
 	ErrInvalidToken = NewError(http.StatusUnauthorized, "auth.token.is_not_valid")
 	ErrTokenRevoked = NewError(http.StatusUnauthorized, "auth.token.revoked")
-	ErrUnhealthy = NewError(http.StatusInternalServerError, "system.unhealthy")
+	ErrUnhealthy    = NewError(http.StatusInternalServerError, "system.unhealthy")
 )
 
 type Error struct {
