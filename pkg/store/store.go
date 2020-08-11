@@ -12,4 +12,5 @@ var (
 // Store is an interface for communication with store.
 type Store interface {
 	Token() TokenRepository
+	Blacklist() BlackListRepository
 }

@@ -17,7 +17,7 @@ func Start(addr string, store store.Store, publisher eventapi.Publisher) error {
 
 	srv := http.Server{
 		Addr:    addr,
-		Handler: handlers.LoggingHandler(os.Stdout, server),
+		Handler: handlers.LoggingHandler(os.Stdout, handlers.ProxyHeaders(server)),
 	}
 
 	log.Printf("Listening on port %s...\n", addr)

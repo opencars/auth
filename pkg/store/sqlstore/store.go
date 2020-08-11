@@ -10,7 +10,8 @@ import (
 type Store struct {
 	db *sqlx.DB
 
-	tokenRepository *TokenRepository
+	tokenRepository     *TokenRepository
+	blackListRepository *BlacklistRepository
 }
 
 func (s *Store) Token() store.TokenRepository {
@@ -23,6 +24,18 @@ func (s *Store) Token() store.TokenRepository {
 	}
 
 	return s.tokenRepository
+}
+
+func (s *Store) Blacklist() store.BlackListRepository {
+	if s.blackListRepository != nil {
+		return s.blackListRepository
+	}
+
+	s.blackListRepository = &BlacklistRepository{
+		store: s,
+	}
+
+	return s.blackListRepository
 }
 
 func New(host string, port int, user, password, dbname string) (*Store, error) {

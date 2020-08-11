@@ -1,9 +1,9 @@
 package apiserver
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gorilla/handlers"
@@ -47,7 +47,7 @@ func (s *server) handleAuth() Handler {
 
 		auth := model.Authorization{
 			Status: "succeed",
-			IP:     r.RemoteAddr,
+			IP:     strings.Split(r.RemoteAddr, ":")[0],
 			Time:   time.Now().UTC(),
 			Token: model.Token{
 				ID: id,
@@ -72,16 +72,18 @@ func (s *server) handleAuth() Handler {
 			return s.result(&auth, &ErrTokenRevoked)
 		}
 
+		item, err := s.store.Blacklist().FindByIPv4(auth.IP)
+		if err == nil && item.Enabled {
+			return s.result(&auth, &ErrAccessDenied)
+		}
+
+		if err != nil && err != store.ErrRecordNotFound {
+			return err
+		}
+
 		w.Header().Set("X-Auth-Id", token.ID)
 		w.Header().Set("X-Auth-Name", token.Name)
 		w.WriteHeader(http.StatusOK)
-
-		// Log headers. TODO: Remove!
-		for name, values := range r.Header {
-			for _, value := range values {
-				fmt.Println(name, value)
-			}
-		}
 
 		return s.result(&auth, nil)
 	}
