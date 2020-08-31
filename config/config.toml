@@ -4,6 +4,7 @@ port = 5432
 username = "postgres"
 password = ""
 database = "auth_test"
+ssl_mode = "disable"
 
 [event_api]
 enabled = true

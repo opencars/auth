@@ -25,7 +25,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	store, err := sqlstore.New(conf.DB.Host, conf.DB.Port, conf.DB.User, conf.DB.Password, conf.DB.Name)
+	store, err := sqlstore.New(conf.DB.Host, conf.DB.Port, conf.DB.User, conf.DB.Password, conf.DB.Name, conf.DB.SSLMode)
 	if err != nil {
 		log.Fatal(err)
 	}

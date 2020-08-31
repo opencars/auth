@@ -38,8 +38,8 @@ func (s *Store) Blacklist() store.BlackListRepository {
 	return s.blackListRepository
 }
 
-func New(host string, port int, user, password, dbname string) (*Store, error) {
-	info := fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode=disable password=%s", host, port, user, dbname, password)
+func New(host string, port int, user, password, dbname, sslmode string) (*Store, error) {
+	info := fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode=%s password=%s", host, port, user, dbname, sslmode, password)
 
 	db, err := sqlx.Connect("postgres", info)
 	if err != nil {

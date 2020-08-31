@@ -20,6 +20,7 @@ type Database struct {
 	User     string `toml:"username"`
 	Password string `toml:"password"`
 	Name     string `toml:"database"`
+	SSLMode  string `toml:"ssl_mode"`
 }
 
 type EventAPI struct {
