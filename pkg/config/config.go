@@ -2,31 +2,31 @@ package config
 
 import (
 	"fmt"
-	"log"
+	"os"
 
-	"github.com/BurntSushi/toml"
+	"gopkg.in/yaml.v2"
 )
 
 // Settings is decoded configuration file.
 type Settings struct {
-	DB       Database `toml:"database"`
-	EventAPI EventAPI `toml:"event_api"`
+	DB       Database `yaml:"database"`
+	EventAPI EventAPI `yaml:"event_api"`
 }
 
 // Database contains configuration details for database.
 type Database struct {
-	Host     string `toml:"host"`
-	Port     int    `toml:"port"`
-	User     string `toml:"username"`
-	Password string `toml:"password"`
-	Name     string `toml:"database"`
-	SSLMode  string `toml:"ssl_mode"`
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	User     string `yaml:"username"`
+	Password string `yaml:"password"`
+	Name     string `yaml:"database"`
+	SSLMode  string `yaml:"ssl_mode"`
 }
 
 type EventAPI struct {
-	Enabled bool   `toml:"enabled"`
-	Host    string `toml:"host"`
-	Port    int    `toml:"port"`
+	Enabled bool   `yaml:"enabled"`
+	Host    string `yaml:"host"`
+	Port    int    `yaml:"port"`
 }
 
 func (api *EventAPI) Address() string {
@@ -35,10 +35,16 @@ func (api *EventAPI) Address() string {
 
 // New reads application configuration from specified file path.
 func New(path string) (*Settings, error) {
-	config := new(Settings)
-	if _, err := toml.DecodeFile(path, config); err != nil {
-		log.Fatal(err)
+	var config Settings
+
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
 	}
 
-	return config, nil
+	if err := yaml.NewDecoder(f).Decode(&config); err != nil {
+		return nil, err
+	}
+
+	return &config, nil
 }

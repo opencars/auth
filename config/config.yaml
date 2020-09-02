@@ -1,0 +1,12 @@
+database:
+  host: "127.0.0.1"
+  port: 5432
+  username: "postgres"
+  password: "password"
+  database: "auth_test"
+  ssl_mode: "disable"
+
+event_api:
+  enabled: true
+  host: "127.0.0.1"
+  port: 4222
