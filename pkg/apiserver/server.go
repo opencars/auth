@@ -33,7 +33,7 @@ func newServer(store store.Store, publisher eventapi.Publisher) *server {
 }
 
 func (s *server) configureRoutes() {
-	s.router.Handle("/api/v1/auth", s.handleAuth()).Methods("GET", "OPTIONS")
+	s.router.Handle("/api/v1/auth", s.handleAuth()).Methods("GET", "POST", "OPTIONS")
 }
 
 func (s *server) handleAuth() Handler {
@@ -113,7 +113,7 @@ func (s *server) result(auth *model.Authorization, authErr *Error) error {
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	origins := handlers.AllowedOrigins([]string{"*"})
-	methods := handlers.AllowedMethods([]string{"GET", "OPTIONS"})
+	methods := handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"})
 	headers := handlers.AllowedHeaders([]string{"X-Api-Key", "Api-Key"})
 	cors := handlers.CORS(origins, methods, headers)(s.router)
 
