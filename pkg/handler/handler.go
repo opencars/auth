@@ -1,9 +1,10 @@
-package apiserver
+package handler
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
+
+	"github.com/opencars/auth/pkg/logger"
 )
 
 // The Handler helps to handle errors in one place.
@@ -11,18 +12,20 @@ type Handler func(w http.ResponseWriter, r *http.Request) error
 
 // ServeHTTP allows our Handler type to satisfy http.Handler.
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	if err := h(w, r); err != nil {
-		w.Header().Set("Content-Type", "application/json")
 		switch e := err.(type) {
 		case Error:
-			w.WriteHeader(e.Code)
+			w.WriteHeader(e.Status())
 			if err := json.NewEncoder(w).Encode(e); err != nil {
 				panic(err)
 			}
 		default:
-			log.Println(err)
+			// Any error types we don't specifically look out for default to serving a HTTP 500
+			logger.Errorf("unhealthy: %s", err)
 			w.WriteHeader(http.StatusInternalServerError)
-			if err := json.NewEncoder(w).Encode(ErrUnhealthy); err != nil {
+			e = NewError(http.StatusInternalServerError, ErrUnhealthy.Error())
+			if err := json.NewEncoder(w).Encode(e); err != nil {
 				panic(err)
 			}
 		}

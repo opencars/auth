@@ -1,14 +1,18 @@
 package main
 
 import (
+	"context"
 	"flag"
-	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	_ "github.com/lib/pq"
 
-	"github.com/opencars/auth/pkg/apiserver"
+	"github.com/opencars/auth/pkg/api/http"
 	"github.com/opencars/auth/pkg/config"
 	"github.com/opencars/auth/pkg/eventapi/natspub"
+	"github.com/opencars/auth/pkg/logger"
 	"github.com/opencars/auth/pkg/store/sqlstore"
 )
 
@@ -19,23 +23,37 @@ func main() {
 
 	flag.Parse()
 
-	// Get configuration.
 	conf, err := config.New(configPath)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatalf("failed read config: %v", err)
 	}
+
+	logger.NewLogger(logger.LogLevel(conf.Log.Level), conf.Log.Mode == "dev")
 
 	store, err := sqlstore.New(conf.DB.Host, conf.DB.Port, conf.DB.User, conf.DB.Password, conf.DB.Name, conf.DB.SSLMode)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatalf("store: %v", err)
 	}
 
 	pub, err := natspub.New(conf.EventAPI.Address(), conf.EventAPI.Enabled)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatalf("nats: %v", err)
 	}
 
-	if err := apiserver.Start(":8080", store, pub); err != nil {
-		log.Fatal(err)
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	go func() {
+		<-c
+		cancel()
+	}()
+
+	addr := ":8080"
+	logger.Infof("Listening on %s...", addr)
+	if err := http.Start(ctx, addr, &conf.Server, pub, store); err != nil {
+		logger.Fatalf("http server failed: %v", err)
 	}
 }
