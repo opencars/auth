@@ -39,12 +39,14 @@ type Database struct {
 	SSLMode  string `yaml:"ssl_mode"`
 }
 
+// EventAPI contains configuration details for application event API.
 type EventAPI struct {
 	Enabled bool   `yaml:"enabled"`
 	Host    string `yaml:"host"`
 	Port    int    `yaml:"port"`
 }
 
+// Address returns calculated address for connecting to NATS.
 func (api *EventAPI) Address() string {
 	return fmt.Sprintf("nats://%s:%d", api.Host, api.Port)
 }

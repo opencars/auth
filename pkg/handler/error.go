@@ -3,10 +3,14 @@ package handler
 import "net/http"
 
 var (
+	// ErrInvalidToken returned, if ApiKey/X-Api-Key is not valid.
 	ErrInvalidToken = NewError(http.StatusUnauthorized, "auth.token.is_not_valid")
+	// ErrTokenRevoked returned, if ApiKey/X-Api-Key was temporary disabled.
 	ErrTokenRevoked = NewError(http.StatusUnauthorized, "auth.token.revoked")
+	// ErrAccessDenied returned, if ip address is blacklisted.
 	ErrAccessDenied = NewError(http.StatusForbidden, "auth.access_denied")
-	ErrUnhealthy    = NewError(http.StatusInternalServerError, "system.unhealthy")
+	// ErrUnhealthy returned, if application has an internal error.
+	ErrUnhealthy = NewError(http.StatusInternalServerError, "system.unhealthy")
 )
 
 // Error represents a handler error. It provides methods for a HTTP status

@@ -7,6 +7,7 @@ func init() {
 	NewLogger(Debug, true)
 }
 
+// Log returns global logger instance.
 func Log() Logger {
 	return log
 }
