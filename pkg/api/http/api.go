@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/gorilla/handlers"
 
@@ -54,6 +55,6 @@ func logFormatter(_ io.Writer, pp handlers.LogFormatterParams) {
 		"path":   pp.URL.Path,
 		"status": pp.StatusCode,
 		"size":   pp.Size,
-		"addr":   pp.Request.RemoteAddr,
+		"addr":   strings.Split(pp.Request.RemoteAddr, ",")[0],
 	}).Infof("http")
 }
