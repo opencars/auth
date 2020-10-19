@@ -7,6 +7,7 @@ import (
 	"github.com/opencars/auth/pkg/store"
 )
 
+// Store is an implementation of store.Store interface based on PostgreSQL.
 type Store struct {
 	db *sqlx.DB
 
@@ -14,6 +15,7 @@ type Store struct {
 	blackListRepository *BlacklistRepository
 }
 
+// Token returns repository responsible for tokens.
 func (s *Store) Token() store.TokenRepository {
 	if s.tokenRepository != nil {
 		return s.tokenRepository
@@ -26,6 +28,7 @@ func (s *Store) Token() store.TokenRepository {
 	return s.tokenRepository
 }
 
+// Blacklist returns repository responsible for blacklisted items.
 func (s *Store) Blacklist() store.BlackListRepository {
 	if s.blackListRepository != nil {
 		return s.blackListRepository
@@ -38,6 +41,7 @@ func (s *Store) Blacklist() store.BlackListRepository {
 	return s.blackListRepository
 }
 
+// New returns newly allocated store.
 func New(host string, port int, user, password, dbname, sslmode string) (*Store, error) {
 	info := fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode=%s password=%s", host, port, user, dbname, sslmode, password)
 

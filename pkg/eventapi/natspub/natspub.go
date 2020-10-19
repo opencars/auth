@@ -8,10 +8,12 @@ import (
 	"github.com/opencars/auth/pkg/eventapi"
 )
 
+// Publisher is an implementation ofn pubsub.Publisher interface for NATS.
 type Publisher struct {
 	conn *nats.Conn
 }
 
+// New returns new connection to NATS.
 func New(url string, enabled bool) (*Publisher, error) {
 	if !enabled {
 		return &Publisher{}, nil
@@ -27,6 +29,7 @@ func New(url string, enabled bool) (*Publisher, error) {
 	}, nil
 }
 
+// Publish publishes event into the queue.
 func (p *Publisher) Publish(event *eventapi.Event) error {
 	if p.conn == nil {
 		return nil
