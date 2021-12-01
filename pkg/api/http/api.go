@@ -10,14 +10,14 @@ import (
 	"github.com/gorilla/handlers"
 
 	"github.com/opencars/auth/pkg/config"
+	"github.com/opencars/auth/pkg/domain"
 	"github.com/opencars/auth/pkg/eventapi"
 	"github.com/opencars/auth/pkg/logger"
-	"github.com/opencars/auth/pkg/store"
 )
 
 // Start starts the server with specified store.
-func Start(ctx context.Context, addr string, conf *config.Server, pub eventapi.Publisher, store store.Store) error {
-	s := newServer(pub, store)
+func Start(ctx context.Context, addr string, conf *config.Server, pub eventapi.Publisher, store domain.Store, svc domain.UserService) error {
+	s := newServer(pub, store, svc)
 
 	srv := http.Server{
 		Addr:           addr,
