@@ -17,7 +17,7 @@ type UserService interface {
 }
 
 type SessionChecker interface {
-	CheckSession(ctx context.Context, sessionToken string) (*model.User, error)
+	CheckSession(ctx context.Context, sessionToken, cookie string) (*model.User, error)
 }
 
 // TokenRepository is responsible for tokens manipulation.

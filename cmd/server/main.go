@@ -13,6 +13,7 @@ import (
 	"github.com/opencars/auth/pkg/config"
 	"github.com/opencars/auth/pkg/domain/service"
 	"github.com/opencars/auth/pkg/eventapi/natspub"
+	"github.com/opencars/auth/pkg/kratos"
 	"github.com/opencars/auth/pkg/logger"
 	"github.com/opencars/auth/pkg/store/sqlstore"
 )
@@ -54,9 +55,14 @@ func main() {
 		cancel()
 	}()
 
+	client, err := kratos.NewClient(conf.Kratos.BaseURL)
+	if err != nil {
+		logger.Fatalf("kratos: %v", err)
+	}
+
 	addr := ":8080"
 	logger.Infof("Listening on %s...", addr)
-	if err := http.Start(ctx, addr, &conf.Server, pub, store, svc); err != nil {
+	if err := http.Start(ctx, addr, &conf.Server, pub, store, svc, client); err != nil {
 		logger.Fatalf("http server failed: %v", err)
 	}
 }

@@ -18,9 +18,9 @@ func (r *TokenRepository) Create(ctx context.Context, token *model.Token) error 
 	_, err := r.store.db.NamedExecContext(ctx,
 		`INSERT INTO tokens
 		(
-			id, user_id, secret, name, enabled, created_at
+			id, user_id, secret, name, enabled, created_at, updated_at
 		) VALUES(
-			:id, :user_id, :secret, :name, :enabled, :created_at
+			:id, :user_id, :secret, :name, :enabled, :created_at, :updated_at
 		)`, token,
 	)
 
@@ -29,8 +29,8 @@ func (r *TokenRepository) Create(ctx context.Context, token *model.Token) error 
 
 func (r *TokenRepository) Update(ctx context.Context, token *model.Token) error {
 	_, err := r.store.db.NamedExecContext(ctx,
-		`UPDATE tokens SET secret= :secret name=:name enabled=:enabled
-		WHERE id =:id)`,
+		`UPDATE tokens SET secret = :secret, name =:name, enabled = :enabled
+		WHERE id = :id`,
 		token,
 	)
 

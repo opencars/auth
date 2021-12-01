@@ -16,8 +16,8 @@ type Client struct {
 	c    *kratos.APIClient
 }
 
-func NewClient(host string) (*Client, error) {
-	url, err := url.Parse(host)
+func NewClient(baseUrl string) (*Client, error) {
+	url, err := url.Parse(baseUrl)
 	if err != nil {
 		return nil, err
 	}
@@ -25,8 +25,11 @@ func NewClient(host string) (*Client, error) {
 	return &Client{
 		host: url.String(),
 		c: kratos.NewAPIClient(&kratos.Configuration{
-			Host:      host,
-			UserAgent: "opencars/1.0.0/go",
+			Servers: kratos.ServerConfigurations{
+				{
+					URL: baseUrl,
+				},
+			},
 			HTTPClient: &http.Client{
 				Timeout: 5 * time.Second,
 			},
@@ -34,10 +37,12 @@ func NewClient(host string) (*Client, error) {
 	}, nil
 }
 
-func (c *Client) CheckSession(ctx context.Context, cookie string) (*model.User, error) {
+func (c *Client) CheckSession(ctx context.Context, sessionToken, cookie string) (*model.User, error) {
 	logger.Debugf("seneding to session: %#v", cookie)
 
-	req := c.c.V0alpha2Api.ToSession(ctx).Cookie(cookie)
+	req := c.c.V0alpha2Api.ToSession(ctx).
+		Cookie(cookie).
+		XSessionToken(sessionToken)
 
 	session, _, err := c.c.V0alpha2Api.ToSessionExecute(req)
 	if err != nil {

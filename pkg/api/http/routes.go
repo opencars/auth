@@ -9,7 +9,7 @@ import (
 	"github.com/opencars/auth/pkg/eventapi"
 )
 
-func configureRouter(pub eventapi.Publisher, store domain.Store, svc domain.UserService) http.Handler {
+func configureRouter(pub eventapi.Publisher, store domain.Store, svc domain.UserService, checker domain.SessionChecker) http.Handler {
 	tokens := tokenHandler{svc: svc}
 	tAuth := AuthHandler{publisher: pub, store: store}
 
@@ -21,13 +21,15 @@ func configureRouter(pub eventapi.Publisher, store domain.Store, svc domain.User
 	router.PathPrefix("/private/auth").Handler(tAuth.handleAuth()).Methods("GET", "POST", "OPTIONS")
 
 	user := router.PathPrefix("/user").Subrouter()
-	user.Use()
+	user.Use(
+		SessionCheckerMiddleware(checker),
+	)
 
-	user.Handle("/tokens", tokens.Create()).Methods("POST")                // POST   /api/v1/tokens.
-	user.Handle("/tokens", tokens.List()).Methods("GET")                   // GET    /api/v1/tokens.
-	user.Handle("/tokens/:token_id", tokens.Details()).Methods("GET")      // GET    /api/v1/tokens/:id.
-	user.Handle("/tokens/:token_id", tokens.Delete()).Methods("DELETE")    // DELETE /api/v1/tokens/:id.
-	user.Handle("/tokens/:token_id/reset", tokens.Reset()).Methods("POST") // DELETE /api/v1/tokens/:id/reset.
+	user.Handle("/tokens", tokens.Create()).Methods("POST")                 // POST   /api/v1/tokens.
+	user.Handle("/tokens", tokens.List()).Methods("GET")                    // GET    /api/v1/tokens.
+	user.Handle("/tokens/{token_id}", tokens.Details()).Methods("GET")      // GET    /api/v1/tokens/:id.
+	user.Handle("/tokens/{token_id}", tokens.Delete()).Methods("DELETE")    // DELETE /api/v1/tokens/:id.
+	user.Handle("/tokens/{token_id}/reset", tokens.Reset()).Methods("POST") // DELETE /api/v1/tokens/:id/reset.
 
 	return router
 }

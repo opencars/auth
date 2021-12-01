@@ -71,7 +71,16 @@ func (s *UserService) ListTokens(ctx context.Context, q *query.ListTokens) ([]mo
 		return nil, err
 	}
 
-	return s.repo.List(ctx, q)
+	tokens, err := s.repo.List(ctx, q)
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range tokens {
+		tokens[i].ClearSecret()
+	}
+
+	return tokens, nil
 }
 
 func (s *UserService) TokenDetails(ctx context.Context, q *query.TokenDetails) (*model.Token, error) {
@@ -79,5 +88,12 @@ func (s *UserService) TokenDetails(ctx context.Context, q *query.TokenDetails) (
 		return nil, err
 	}
 
-	return s.repo.FindByID(ctx, q.TokenID)
+	token, err := s.repo.FindByID(ctx, q.TokenID)
+	if err != nil {
+		return nil, err
+	}
+
+	token.ClearSecret()
+
+	return token, nil
 }
