@@ -39,13 +39,10 @@ func (c *Client) CheckSession(ctx context.Context, cookie string) (*model.User, 
 
 	req := c.c.V0alpha2Api.ToSession(ctx).Cookie(cookie)
 
-	session, resp, err := c.c.V0alpha2Api.ToSessionExecute(req)
+	session, _, err := c.c.V0alpha2Api.ToSessionExecute(req)
 	if err != nil {
 		return nil, err
 	}
-
-	logger.Debugf("response: %#v", resp)
-	logger.Debugf("session: %#v", session)
 
 	return &model.User{
 		ID: session.Identity.Id,
