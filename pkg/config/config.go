@@ -13,6 +13,7 @@ type Settings struct {
 	EventAPI EventAPI `yaml:"event_api"`
 	Log      Log      `yaml:"log"`
 	Server   Server   `yaml:"server"`
+	Kratos   Kratos   `yaml:"kratos"`
 }
 
 // Log represents settings for application logger.

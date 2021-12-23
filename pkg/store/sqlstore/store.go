@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/opencars/auth/pkg/store"
+	"github.com/opencars/auth/pkg/domain"
 )
 
 // Store is an implementation of store.Store interface based on PostgreSQL.
@@ -16,7 +16,7 @@ type Store struct {
 }
 
 // Token returns repository responsible for tokens.
-func (s *Store) Token() store.TokenRepository {
+func (s *Store) Token() domain.TokenRepository {
 	if s.tokenRepository != nil {
 		return s.tokenRepository
 	}
@@ -29,7 +29,7 @@ func (s *Store) Token() store.TokenRepository {
 }
 
 // Blacklist returns repository responsible for blacklisted items.
-func (s *Store) Blacklist() store.BlackListRepository {
+func (s *Store) Blacklist() domain.BlackListRepository {
 	if s.blackListRepository != nil {
 		return s.blackListRepository
 	}
