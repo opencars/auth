@@ -62,7 +62,7 @@ func main() {
 
 	addr := ":8080"
 	logger.Infof("Listening on %s...", addr)
-	if err := http.Start(ctx, addr, &conf.Server, pub, store, svc, client); err != nil {
+	if err := http.Start(ctx, addr, conf, pub, store, svc, client); err != nil {
 		logger.Fatalf("http server failed: %v", err)
 	}
 }

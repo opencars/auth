@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/handlers"
 
+	"github.com/opencars/auth/pkg/config"
 	"github.com/opencars/auth/pkg/domain"
 	"github.com/opencars/auth/pkg/eventapi"
 	"github.com/opencars/auth/pkg/handler"
@@ -19,9 +20,9 @@ type server struct {
 	store     domain.Store
 }
 
-func newServer(pub eventapi.Publisher, store domain.Store, svc domain.UserService, checker domain.SessionChecker) *server {
+func newServer(pub eventapi.Publisher, store domain.Store, svc domain.UserService, checker domain.SessionChecker, conf *config.Kratos) *server {
 	s := server{
-		router:    configureRouter(pub, store, svc, checker),
+		router:    configureRouter(pub, store, svc, checker, conf),
 		publisher: pub,
 		store:     store,
 	}
