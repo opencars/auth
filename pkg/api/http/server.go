@@ -19,9 +19,9 @@ type server struct {
 	store     domain.Store
 }
 
-func newServer(pub eventapi.Publisher, store domain.Store, svc domain.UserService) *server {
+func newServer(pub eventapi.Publisher, store domain.Store, svc domain.UserService, checker domain.SessionChecker) *server {
 	s := server{
-		router:    configureRouter(pub, store, svc),
+		router:    configureRouter(pub, store, svc, checker),
 		publisher: pub,
 		store:     store,
 	}

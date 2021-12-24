@@ -63,11 +63,6 @@ func (h *tokenHandler) List() handler.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		userID := UserIDFromContext(r.Context())
 
-		var req CreateTokenRequest
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			return err
-		}
-
 		q := query.ListTokens{
 			UserID: userID,
 			Limit:  r.URL.Query().Get("limit"),

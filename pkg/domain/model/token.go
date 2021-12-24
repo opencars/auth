@@ -2,7 +2,7 @@ package model
 
 import (
 	"crypto/rand"
-	"encoding/base64"
+	"encoding/hex"
 	"time"
 
 	uuid "github.com/satori/go.uuid"
@@ -12,7 +12,7 @@ import (
 type Token struct {
 	ID        string    `json:"id" db:"id"`
 	UserID    string    `json:"user_id" db:"user_id"`
-	Secret    string    `json:"secret" db:"secret"`
+	Secret    string    `json:"secret,omitempty" db:"secret"`
 	Name      string    `json:"name" db:"name"`
 	Enabled   bool      `json:"enabled" db:"enabled"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
@@ -23,7 +23,7 @@ func NewToken(userID, name string) *Token {
 	return &Token{
 		ID:        uuid.NewV4().String(),
 		UserID:    userID,
-		Secret:    newSecret(),
+		Secret:    GenerateSecret(16),
 		Name:      name,
 		Enabled:   true,
 		CreatedAt: time.Now().UTC(),
@@ -32,7 +32,11 @@ func NewToken(userID, name string) *Token {
 }
 
 func (t *Token) ResetSecret() {
-	t.Secret = newSecret()
+	t.Secret = GenerateSecret(16)
+}
+
+func (t *Token) ClearSecret() {
+	t.Secret = ""
 }
 
 // AuthStatus is status of authorization.
@@ -54,9 +58,11 @@ type Authorization struct {
 	Time   time.Time  `json:"timestamp"`
 }
 
-func newSecret() string {
-	apiKey := make([]byte, 31)
-	_, _ = rand.Read(apiKey)
+func GenerateSecret(length int) string {
+	b := make([]byte, length)
+	if _, err := rand.Read(b); err != nil {
+		return ""
+	}
 
-	return base64.StdEncoding.EncodeToString(apiKey)
+	return hex.EncodeToString(b)
 }
