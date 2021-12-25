@@ -16,16 +16,9 @@ var (
 func SessionCheckerMiddleware(cookieName string, checker domain.SessionChecker) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return httputil.Handler(func(w http.ResponseWriter, r *http.Request) error {
-			var cookieValue string
-
-			cookie, err := r.Cookie(cookieName)
-			if err == nil && cookie != nil {
-				cookieValue = cookie.Value
-			}
-
 			sessionToken := strings.Replace(r.Header.Get("Authorization"), "Bearer ", "", 1)
 
-			user, err := checker.CheckSession(r.Context(), sessionToken, cookieValue)
+			user, err := checker.CheckSession(r.Context(), sessionToken, r.Header.Get("Cookie"))
 			if err != nil {
 				return ErrUnauthorized
 			}
