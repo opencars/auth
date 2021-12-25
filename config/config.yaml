@@ -18,6 +18,7 @@ database:
 
 kratos:
   base_url: https://flamboyant-goldwasser-wpzu88jwpx.projects.oryapis.com/api/kratos/public
+  cookie: ory_session_flamboyantgoldwasserwpzu88jwpx
 
 event_api:
   enabled: true
