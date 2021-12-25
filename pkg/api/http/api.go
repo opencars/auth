@@ -16,15 +16,15 @@ import (
 )
 
 // Start starts the server with specified store.
-func Start(ctx context.Context, addr string, conf *config.Server, pub eventapi.Publisher, store domain.Store, svc domain.UserService, checker domain.SessionChecker) error {
-	s := newServer(pub, store, svc, checker)
+func Start(ctx context.Context, addr string, conf *config.Settings, pub eventapi.Publisher, store domain.Store, svc domain.UserService, checker domain.SessionChecker) error {
+	s := newServer(pub, store, svc, checker, &conf.Kratos)
 
 	srv := http.Server{
 		Addr:           addr,
 		Handler:        handlers.CustomLoggingHandler(os.Stdout, handlers.ProxyHeaders(s), logFormatter),
-		ReadTimeout:    conf.ReadTimeout.Duration,
-		WriteTimeout:   conf.WriteTimeout.Duration,
-		IdleTimeout:    conf.IdleTimeout.Duration,
+		ReadTimeout:    conf.Server.ReadTimeout.Duration,
+		WriteTimeout:   conf.Server.WriteTimeout.Duration,
+		IdleTimeout:    conf.Server.IdleTimeout.Duration,
 		MaxHeaderBytes: 1 << 20,
 	}
 
@@ -37,7 +37,7 @@ func Start(ctx context.Context, addr string, conf *config.Server, pub eventapi.P
 	case err := <-errs:
 		return err
 	case <-ctx.Done():
-		ctxShutDown, cancel := context.WithTimeout(context.Background(), conf.ShutdownTimeout.Duration)
+		ctxShutDown, cancel := context.WithTimeout(context.Background(), conf.Server.ShutdownTimeout.Duration)
 		defer cancel()
 
 		err := srv.Shutdown(ctxShutDown)

@@ -5,11 +5,12 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"github.com/opencars/auth/pkg/config"
 	"github.com/opencars/auth/pkg/domain"
 	"github.com/opencars/auth/pkg/eventapi"
 )
 
-func configureRouter(pub eventapi.Publisher, store domain.Store, svc domain.UserService, checker domain.SessionChecker) http.Handler {
+func configureRouter(pub eventapi.Publisher, store domain.Store, svc domain.UserService, checker domain.SessionChecker, conf *config.Kratos) http.Handler {
 	tokens := tokenHandler{svc: svc}
 	tAuth := AuthHandler{publisher: pub, store: store}
 
@@ -22,7 +23,7 @@ func configureRouter(pub eventapi.Publisher, store domain.Store, svc domain.User
 
 	user := router.PathPrefix("/user").Subrouter()
 	user.Use(
-		SessionCheckerMiddleware(checker),
+		SessionCheckerMiddleware(conf.Cookie, checker),
 	)
 
 	user.Handle("/tokens", tokens.Create()).Methods("POST")                 // POST   /api/v1/tokens.
