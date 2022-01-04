@@ -87,8 +87,10 @@ func (r *TokenRepository) List(ctx context.Context, q *query.ListTokens) ([]mode
 	err := r.store.db.Select(&tokens,
 		`SELECT id, user_id, secret, name, enabled, created_at, updated_at
 		FROM tokens
+		WHERE user_id = $1
 		ORDER BY created_at ASC
-		LIMIT $1 OFFSET $2`,
+		LIMIT $2 OFFSET $3`,
+		q.UserID,
 		q.GetLimit(), q.GetOffset(),
 	)
 
