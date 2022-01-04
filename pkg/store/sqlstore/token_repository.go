@@ -38,7 +38,7 @@ func (r *TokenRepository) Update(ctx context.Context, token *model.Token) error 
 }
 
 func (r *TokenRepository) DeleteByID(ctx context.Context, id string) error {
-	_, err := r.store.db.ExecContext(ctx, `DELETE tokens WHERE id = $1`, id)
+	_, err := r.store.db.ExecContext(ctx, `DELETE FROM tokens WHERE id = $1`, id)
 
 	return err
 }
