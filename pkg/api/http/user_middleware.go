@@ -13,7 +13,7 @@ var (
 	ErrUnauthorized = httputil.NewError(http.StatusUnauthorized, "user.not_authorized")
 )
 
-func SessionCheckerMiddleware(cookieName string, checker domain.SessionChecker) mux.MiddlewareFunc {
+func SessionCheckerMiddleware(checker domain.SessionChecker) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return httputil.Handler(func(w http.ResponseWriter, r *http.Request) error {
 			sessionToken := strings.Replace(r.Header.Get("Authorization"), "Bearer ", "", 1)
