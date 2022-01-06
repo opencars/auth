@@ -10,8 +10,8 @@ import (
 	"github.com/opencars/auth/pkg/config"
 	"github.com/opencars/auth/pkg/domain"
 	"github.com/opencars/auth/pkg/eventapi"
-	"github.com/opencars/auth/pkg/handler"
 	"github.com/opencars/auth/pkg/version"
+	"github.com/opencars/httputil"
 )
 
 type server struct {
@@ -40,7 +40,7 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	compress.ServeHTTP(w, r)
 }
 
-func (*server) Version() handler.Handler {
+func (*server) Version() httputil.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		v := struct {
 			Version string `json:"version"`

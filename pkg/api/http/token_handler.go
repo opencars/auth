@@ -8,14 +8,14 @@ import (
 	"github.com/opencars/auth/pkg/domain"
 	"github.com/opencars/auth/pkg/domain/command"
 	"github.com/opencars/auth/pkg/domain/query"
-	"github.com/opencars/auth/pkg/handler"
+	"github.com/opencars/httputil"
 )
 
 type tokenHandler struct {
 	svc domain.UserService
 }
 
-func (h *tokenHandler) Create() handler.Handler {
+func (h *tokenHandler) Create() httputil.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		userID := UserIDFromContext(r.Context())
 
@@ -39,7 +39,7 @@ func (h *tokenHandler) Create() handler.Handler {
 	}
 }
 
-func (h *tokenHandler) Delete() handler.Handler {
+func (h *tokenHandler) Delete() httputil.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		userID := UserIDFromContext(r.Context())
 		tokenID := mux.Vars(r)["token_id"]
@@ -59,7 +59,7 @@ func (h *tokenHandler) Delete() handler.Handler {
 	}
 }
 
-func (h *tokenHandler) List() handler.Handler {
+func (h *tokenHandler) List() httputil.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		userID := UserIDFromContext(r.Context())
 
@@ -78,7 +78,7 @@ func (h *tokenHandler) List() handler.Handler {
 	}
 }
 
-func (h *tokenHandler) Reset() handler.Handler {
+func (h *tokenHandler) Reset() httputil.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		userID := UserIDFromContext(r.Context())
 		tokenID := mux.Vars(r)["token_id"]
@@ -97,7 +97,7 @@ func (h *tokenHandler) Reset() handler.Handler {
 	}
 }
 
-func (h *tokenHandler) Details() handler.Handler {
+func (h *tokenHandler) Details() httputil.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		userID := UserIDFromContext(r.Context())
 		tokenID := mux.Vars(r)["token_id"]
