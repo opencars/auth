@@ -6,6 +6,10 @@ var (
 
 	ErrInvalidLimit  = NewError("query.invalid_limit")
 	ErrInvalidOffset = NewError("query.invalid_offset")
+
+	ErrInvalidToken = NewError("auth.token.is_not_valid")
+	ErrTokenRevoked = NewError("auth.token.revoked")
+	ErrAccessDenied = NewError("auth.access_denied")
 )
 
 type Error struct {

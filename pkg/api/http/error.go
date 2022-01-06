@@ -5,19 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/opencars/auth/pkg/domain/model"
 	"github.com/opencars/httputil"
-)
 
-var (
-	// ErrInvalidToken returned, if ApiKey/X-Api-Key is not valid.
-	ErrInvalidToken = httputil.NewError(http.StatusUnauthorized, "auth.token.is_not_valid")
-
-	// ErrTokenRevoked returned, if ApiKey/X-Api-Key was temporary disabled.
-	ErrTokenRevoked = httputil.NewError(http.StatusUnauthorized, "auth.token.revoked")
-
-	// ErrAccessDenied returned, if ip address is blacklisted.
-	ErrAccessDenied = httputil.NewError(http.StatusForbidden, "auth.access_denied")
+	"github.com/opencars/auth/pkg/domain/model"
 )
 
 func handleErr(err error) error {

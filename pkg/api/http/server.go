@@ -6,12 +6,12 @@ import (
 	"runtime"
 
 	"github.com/gorilla/handlers"
+	"github.com/opencars/httputil"
 
 	"github.com/opencars/auth/pkg/config"
 	"github.com/opencars/auth/pkg/domain"
 	"github.com/opencars/auth/pkg/eventapi"
 	"github.com/opencars/auth/pkg/version"
-	"github.com/opencars/httputil"
 )
 
 type server struct {

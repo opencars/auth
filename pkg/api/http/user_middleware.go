@@ -5,8 +5,9 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
-	"github.com/opencars/auth/pkg/domain"
 	"github.com/opencars/httputil"
+
+	"github.com/opencars/auth/pkg/domain"
 )
 
 var (

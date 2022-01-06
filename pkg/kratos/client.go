@@ -6,9 +6,10 @@ import (
 	"net/url"
 	"time"
 
+	kratos "github.com/ory/kratos-client-go"
+
 	"github.com/opencars/auth/pkg/domain/model"
 	"github.com/opencars/auth/pkg/logger"
-	kratos "github.com/ory/kratos-client-go"
 )
 
 type Client struct {

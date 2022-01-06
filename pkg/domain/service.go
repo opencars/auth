@@ -14,6 +14,7 @@ type UserService interface {
 	ResetToken(context.Context, *command.ResetToken) (*model.Token, error)
 	DeleteToken(context.Context, *command.DeleteToken) error
 	ListTokens(context.Context, *query.ListTokens) ([]model.Token, error)
+	VerifyToken(context.Context, *command.VerifyToken) (*model.Token, error)
 }
 
 type SessionChecker interface {

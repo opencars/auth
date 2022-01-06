@@ -5,10 +5,11 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/opencars/httputil"
+
 	"github.com/opencars/auth/pkg/domain"
 	"github.com/opencars/auth/pkg/domain/command"
 	"github.com/opencars/auth/pkg/domain/query"
-	"github.com/opencars/httputil"
 )
 
 type tokenHandler struct {
