@@ -18,9 +18,10 @@ database:
 
 kratos:
   base_url: https://flamboyant-goldwasser-wpzu88jwpx.projects.oryapis.com/api/kratos/public
-  cookie: ory_session_flamboyantgoldwasserwpzu88jwpx
 
-event_api:
-  enabled: true
+nats:
   host: "127.0.0.1"
   port: 4222
+  user: "opencars"
+  password: "opencars"
+

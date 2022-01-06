@@ -9,11 +9,11 @@ import (
 
 // Settings is decoded configuration file.
 type Settings struct {
-	DB       Database `yaml:"database"`
-	EventAPI EventAPI `yaml:"event_api"`
-	Log      Log      `yaml:"log"`
-	Server   Server   `yaml:"server"`
-	Kratos   Kratos   `yaml:"kratos"`
+	DB     Database `yaml:"database"`
+	NATS   NATS     `yaml:"nats"`
+	Log    Log      `yaml:"log"`
+	Server Server   `yaml:"server"`
+	Kratos Kratos   `yaml:"kratos"`
 }
 
 // Log represents settings for application logger.
@@ -40,16 +40,21 @@ type Database struct {
 	SSLMode  string `yaml:"ssl_mode"`
 }
 
-// EventAPI contains configuration details for application event API.
-type EventAPI struct {
-	Enabled bool   `yaml:"enabled"`
-	Host    string `yaml:"host"`
-	Port    int    `yaml:"port"`
+// NATS contains configuration details for application event API.
+type NATS struct {
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	User     string `yaml:"user"`
+	Password string `yaml:"password"`
 }
 
 // Address returns calculated address for connecting to NATS.
-func (api *EventAPI) Address() string {
-	return fmt.Sprintf("nats://%s:%d", api.Host, api.Port)
+func (nats *NATS) Address() string {
+	if nats.User != "" && nats.Password != "" {
+		return fmt.Sprintf("nats://%s:%s@%s:%d", nats.User, nats.Password, nats.Host, nats.Port)
+	}
+
+	return fmt.Sprintf("nats://%s:%d", nats.Host, nats.Port)
 }
 
 // New reads application configuration from specified file path.

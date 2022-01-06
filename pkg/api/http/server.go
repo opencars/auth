@@ -22,7 +22,7 @@ type server struct {
 
 func newServer(pub eventapi.Publisher, store domain.Store, svc domain.UserService, checker domain.SessionChecker, conf *config.Kratos) *server {
 	s := server{
-		router:    configureRouter(pub, store, svc, checker, conf),
+		router:    configureRouter(pub, store, svc, checker),
 		publisher: pub,
 		store:     store,
 	}

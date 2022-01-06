@@ -37,7 +37,7 @@ func main() {
 		logger.Fatalf("store: %v", err)
 	}
 
-	pub, err := natspub.New(conf.EventAPI.Address(), conf.EventAPI.Enabled)
+	pub, err := natspub.New(conf.NATS.Address(), true)
 	if err != nil {
 		logger.Fatalf("nats: %v", err)
 	}
