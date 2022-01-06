@@ -9,7 +9,7 @@ import (
 	"github.com/opencars/auth/pkg/domain"
 	"github.com/opencars/auth/pkg/domain/model"
 	"github.com/opencars/auth/pkg/eventapi"
-	"github.com/opencars/auth/pkg/handler"
+	"github.com/opencars/httputil"
 )
 
 type AuthHandler struct {
@@ -17,7 +17,7 @@ type AuthHandler struct {
 	store     domain.Store
 }
 
-func (h *AuthHandler) handleAuth() handler.Handler {
+func (h *AuthHandler) handleAuth() httputil.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		ipAddr := strings.Split(r.RemoteAddr, ",")[0]
 
@@ -33,12 +33,12 @@ func (h *AuthHandler) handleAuth() handler.Handler {
 		}
 
 		if secret == "" {
-			return h.result(&auth, &handler.ErrInvalidToken)
+			return h.result(&auth, &ErrInvalidToken)
 		}
 
 		token, err := h.store.Token().FindBySecret(r.Context(), secret)
 		if errors.Is(err, model.ErrTokenNotFound) {
-			return h.result(&auth, &handler.ErrInvalidToken)
+			return h.result(&auth, &ErrInvalidToken)
 		}
 
 		if err != nil {
@@ -47,27 +47,28 @@ func (h *AuthHandler) handleAuth() handler.Handler {
 
 		auth.Token = *token
 		if !token.Enabled {
-			return h.result(&auth, &handler.ErrTokenRevoked)
+			return h.result(&auth, &ErrTokenRevoked)
 		}
 
 		item, err := h.store.Blacklist().FindByIPv4(auth.IP)
 		if err == nil && item.Enabled {
-			return h.result(&auth, &handler.ErrAccessDenied)
+			return h.result(&auth, &ErrAccessDenied)
 		}
 
 		if err != nil && !errors.Is(err, model.ErrBlacklistRecordNotFound) {
 			return err
 		}
 
-		w.Header().Set("X-Auth-Id", token.ID)
-		w.Header().Set("X-Auth-Name", token.Name)
+		w.Header().Set(HeaderTokenID, token.ID)
+		w.Header().Set(HeaderTokenName, token.Name)
+		w.Header().Set(HeaderUserID, token.UserID)
 		w.WriteHeader(http.StatusOK)
 
 		return h.result(&auth, nil)
 	}
 }
 
-func (h *AuthHandler) result(auth *model.Authorization, httpErr *handler.Error) error {
+func (h *AuthHandler) result(auth *model.Authorization, httpErr *httputil.Error) error {
 	if httpErr != nil {
 		auth.Status = model.AuthStatusFailed
 		auth.Error = new(string)

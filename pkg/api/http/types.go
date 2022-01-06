@@ -2,6 +2,12 @@ package http
 
 import "context"
 
+const (
+	HeaderTokenID   = "X-Auth-Id"
+	HeaderTokenName = "X-Auth-Name"
+	HeaderUserID    = "X-User-Id"
+)
+
 type HeaderKey int
 
 const (
