@@ -6,6 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/opencars/auth/pkg/domain"
+	"github.com/opencars/auth/pkg/logger"
 	"github.com/opencars/httputil"
 )
 
@@ -20,6 +21,7 @@ func SessionCheckerMiddleware(checker domain.SessionChecker) mux.MiddlewareFunc 
 
 			user, err := checker.CheckSession(r.Context(), sessionToken, r.Header.Get("Cookie"))
 			if err != nil {
+				logger.Errorf("check session: %+v", err)
 				return ErrUnauthorized
 			}
 
