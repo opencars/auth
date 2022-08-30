@@ -6,10 +6,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/opencars/httputil"
+
 	"github.com/opencars/auth/pkg/domain"
 	"github.com/opencars/auth/pkg/domain/model"
 	"github.com/opencars/auth/pkg/eventapi"
-	"github.com/opencars/httputil"
 )
 
 type AuthHandler struct {
