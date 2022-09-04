@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/opencars/auth/pkg/domain/model"
+	"github.com/opencars/auth/pkg/logger"
 	"github.com/opencars/httputil"
 )
 
@@ -21,6 +22,10 @@ var (
 )
 
 func handleErr(err error) error {
+	if err != nil {
+		logger.Errorf("error: %+v", err)
+	}
+
 	var e model.Error
 	if errors.As(err, &e) {
 		return httputil.NewError(http.StatusBadRequest, e.Error())
